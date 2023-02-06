@@ -18,6 +18,7 @@ jobs:
         with:
           java-version: 17
           distribution: temurin
+          cache: maven
 
       - name: Build specific module
         run: mvn clean install -pl common -DskipTests=true
