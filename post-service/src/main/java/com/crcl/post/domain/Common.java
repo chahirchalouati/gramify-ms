@@ -30,20 +30,29 @@ public class Common extends BaseEntity {
     @Enumerated(EnumType.STRING)
     protected Visibility visibility = Visibility.PRIVATE;
 
+    public enum Visibility {
+        PUBLIC, FRIEND, PRIVATE
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Common common = (Common) o;
-        return getId() != null && Objects.equals(getId(), common.getId());
+        if (!(o instanceof Common common)) return false;
+        if (!super.equals(o)) return false;
+
+        if (!username.equals(common.username)) return false;
+        if (!user.equals(common.user)) return false;
+        if (!content.equals(common.content)) return false;
+        return visibility == common.visibility;
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
-    }
-
-    public enum Visibility {
-        PUBLIC, FRIEND, PRIVATE
+        int result = super.hashCode();
+        result = 31 * result + username.hashCode();
+        result = 31 * result + user.hashCode();
+        result = 31 * result + content.hashCode();
+        result = 31 * result + visibility.hashCode();
+        return result;
     }
 }

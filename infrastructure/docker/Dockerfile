@@ -1,5 +1,5 @@
 # run command below to build image
-# docker build -f Dockerfile . -t ghcr.io/chahirchalouati/github-runner:1.0.2
+# docker build -f Dockerfile . -t ghcr.io/chahirchalouati/github-runner:1.0.1
 FROM debian:buster-slim
 
 ARG GITHUB_RUNNER_VERSION="2.301.1"
@@ -11,6 +11,8 @@ ENV GITHUB_REPOSITORY ""
 
 ENV RUNNER_NAME "runner"
 ENV RUNNER_WORKDIR "_work"
+
+LABEL org.opencontainers.image.source https://github.com/chahirchalouati/gramify-ms
 
 RUN apt-get update \
     && apt-get install -y \
@@ -41,6 +43,10 @@ RUN curl -Ls https://github.com/actions/runner/releases/download/v${GITHUB_RUNNE
     && sudo ./bin/installdependencies.sh
 
 COPY --chown=github:github entrypoint.sh ./entrypoint.sh
+
+# Install dos2unix using sudo
+RUN sudo apt-get update && sudo apt-get install -y dos2unix
+RUN sudo dos2unix ./entrypoint.sh
 RUN sudo chmod u+x ./entrypoint.sh
 
 ENTRYPOINT ["/home/github/entrypoint.sh"]
